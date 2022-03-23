@@ -1,11 +1,21 @@
 package com.seo.blog.model;
 
-import java.sql.*;
+import java.sql.Timestamp;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,9 +47,12 @@ public class Board {
 // 조인 맺어주기
 //	private int userId; //게시글을 누가 적었는지 - user테이블과 조인 필요 (FK)
 //	DB는 오브젝트를 저장할수 없지만 자바는 오브젝트를 저장할 수 있다.
-	@ManyToOne //연관관계, many = Board, one = User
+	@ManyToOne(fetch  = FetchType.EAGER) //연관관계, many = Board, one = User
 	@JoinColumn(name="userId") //FK 이름, 필드값으로 만들어진다
 	private User user; //User를 참조한다
+	
+	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER) //mappedBy 연관관계의 주인이 아니다 (난 FK가 아니에요) 
+	private List<Reply> reply; //reply를 참조한다
 	
 	@CreationTimestamp //데이터가 insert, update될때 자동으로 현재 시각이 들어감
 	private Timestamp createDate;
